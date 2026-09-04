@@ -1,0 +1,32 @@
+services:
+
+  nodo-huancayo:
+    build: .
+    container_name: nodo-huancayo
+    environment:
+      SEDE: almacen-huancayo
+    expose:
+      - "8000"
+    restart: unless-stopped
+
+  nodo-jauja:
+    build: .
+    container_name: nodo-jauja
+    environment:
+      SEDE: almacen-jauja
+    expose:
+      - "8000"
+    restart: unless-stopped
+
+  proxy:
+    image: nginx:alpine
+    container_name: proxy-cadena-frio
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - nodo-huancayo
+      - nodo-jauja
+    restart: unless-stopped

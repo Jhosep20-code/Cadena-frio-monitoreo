@@ -1,0 +1,94 @@
+name: CI/CD Cadena de Frio
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  # ETAPA 1 - COMPILACION
+  build:
+    name: Compilacion
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Verificar que el modulo compila
+        run: python -m compileall src
+
+      - name: Generar artefacto
+        run: |
+          mkdir -p dist
+          cp -r src dist/
+          echo "Version: ${{ github.sha }}" > dist/VERSION.txt
+          echo "Artefacto generado correctamente"
+
+      - name: Guardar artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-cadena-frio
+          path: dist/
+
+  # ETAPA 2 - PRUEBAS AUTOMATIZADAS
+  test:
+    name: Pruebas automatizadas
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      # QUALITY GATE: si la cobertura baja de 80 % el pipeline se detiene
+      - name: Ejecutar pruebas unitarias con cobertura
+        run: pytest --cov=src --cov-report=term-missing --cov-fail-under=80 -v
+
+  # ETAPA 3 - DESPLIEGUE SIMULADO
+  deploy:
+    name: Despliegue simulado
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Recuperar el artefacto
+        uses: actions/download-artifact@v4
+        with:
+          name: app-cadena-frio
+          path: dist/
+
+      - name: Copiar a la carpeta de staging
+        run: |
+          mkdir -p staging
+          cp -r dist/* staging/
+          echo "Contenido desplegado en staging:"
+          ls -R staging
+
+      - name: Verificacion posterior al despliegue
+        run: |
+          echo "Verificando que el modulo responde en staging..."
+          cd staging && python -c "from src.monitor import clasificar; print('Lectura 4.5 C ->', clasificar(4.5))"
+
+      - name: Confirmar despliegue
+        run: |
+          echo "=========================================="
+          echo "   DESPLIEGUE EXITOSO"
+          echo "   Commit:  ${{ github.sha }}"
+          echo "   Entorno: staging"
+          echo "=========================================="
