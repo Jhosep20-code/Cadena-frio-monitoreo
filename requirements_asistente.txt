@@ -1,0 +1,5 @@
+# Dependencias del asistente Termo (TA2). Agregar a requirements.txt del proyecto.
+openai>=1.40
+streamlit>=1.37
+pytest>=8.0
+jsonschema>=4.0

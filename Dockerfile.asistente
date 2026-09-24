@@ -1,0 +1,38 @@
+# Imagen del asistente Termo (TA2).
+# Se separa del servicio monitor para que cada componente escale y se
+# despliegue por su cuenta, como pide la guia interna del proyecto.
+FROM python:3.12-slim
+
+LABEL proyecto="monitor-cadena-frio"
+LABEL componente="asistente-termo"
+LABEL curso="Herramientas de Desarrollo Profesional - TIC"
+
+WORKDIR /app
+
+# Dependencias primero, para aprovechar la cache de capas de Docker
+COPY requirements.txt requirements_asistente.txt ./
+RUN pip install --no-cache-dir -r requirements.txt -r requirements_asistente.txt
+
+# Codigo: el asistente reutiliza src/monitor.py sin modificarlo
+COPY src/ ./src/
+COPY asistente/ ./asistente/
+
+# Usuario sin privilegios y carpeta de bitacoras con permisos correctos
+RUN useradd --create-home termo && mkdir -p /app/bitacora && chown -R termo /app
+USER termo
+
+# La clave se inyecta al levantar el contenedor: nunca viaja en la imagen
+ENV GEMINI_API_KEY=""
+ENV GROQ_API_KEY=""
+ENV OPENAI_API_KEY=""
+ENV WEBHOOK_ALERTAS=""
+ENV CACHE_RESPUESTAS="1"
+ENV PUERTO_ASISTENTE=8501
+
+EXPOSE 8501
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')" || exit 1
+
+CMD ["streamlit", "run", "asistente/app.py", \
+     "--server.port=8501", "--server.address=0.0.0.0", "--server.headless=true"]

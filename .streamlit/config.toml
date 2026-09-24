@@ -1,0 +1,14 @@
+# Tema de Termo: azul hielo para el dominio, rojo para las alertas.
+[theme]
+base = "dark"
+primaryColor = "#38BDF8"
+backgroundColor = "#0A1020"
+secondaryBackgroundColor = "#0F1830"
+textColor = "#E6EDF6"
+
+[client]
+# Oculta el boton "Deploy" y el menu de desarrollador durante la demostracion
+toolbarMode = "minimal"
+
+[server]
+maxUploadSize = 25

@@ -30,3 +30,22 @@ services:
       - nodo-huancayo
       - nodo-jauja
     restart: unless-stopped
+
+  asistente:
+    build:
+      context: .
+      dockerfile: Dockerfile.asistente
+    container_name: asistente-termo
+    environment:
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      CACHE_RESPUESTAS: "1"
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./bitacora:/app/bitacora
+    depends_on:
+      - nodo-huancayo
+      - nodo-jauja
+    restart: unless-stopped

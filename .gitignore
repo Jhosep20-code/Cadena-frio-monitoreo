@@ -5,3 +5,8 @@ __pycache__/
 dist/
 staging/
 .venv/
+.env
+bitacora/
+*.rar
+.agents/
+.claude/

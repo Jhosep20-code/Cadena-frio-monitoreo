@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="Termo - monitor de cadena de frio">
+  <defs>
+    <linearGradient id="frio" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22D3EE"/>
+      <stop offset="100%" stop-color="#0369A1"/>
+    </linearGradient>
+    <linearGradient id="mercurio" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#C8102E"/>
+      <stop offset="100%" stop-color="#F05A6A"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Escudo: la cadena de frio protegida -->
+  <path d="M60 8 L104 24 v38c0 26-19 44-44 50-25-6-44-24-44-50V24z"
+        fill="url(#frio)"/>
+  <path d="M60 16 L96 29 v33c0 21-15 36-36 41-21-5-36-20-36-41V29z"
+        fill="#0B2536" opacity="0.92"/>
+
+  <!-- Copo de nieve, marca de la cadena de frio -->
+  <g stroke="#7DD3FC" stroke-width="2.6" stroke-linecap="round" opacity="0.75">
+    <line x1="38" y1="34" x2="38" y2="52"/>
+    <line x1="30" y1="38" x2="46" y2="48"/>
+    <line x1="46" y1="38" x2="30" y2="48"/>
+  </g>
+
+  <!-- Termometro: el dato que se vigila -->
+  <rect x="64" y="30" width="13" height="40" rx="6.5" fill="#0B2536" stroke="#7DD3FC" stroke-width="2.4"/>
+  <rect x="67.5" y="46" width="6" height="24" fill="url(#mercurio)"/>
+  <circle cx="70.5" cy="76" r="10" fill="url(#mercurio)"/>
+  <circle cx="70.5" cy="76" r="4" fill="#FFFFFF" opacity="0.35"/>
+
+  <!-- Burbuja de dialogo: el asistente responde -->
+  <path d="M30 62h22a7 7 0 0 1 7 7v10a7 7 0 0 1-7 7H42l-9 8v-8h-3a7 7 0 0 1-7-7V69a7 7 0 0 1 7-7z"
+        fill="#22D3EE"/>
+  <g fill="#0B2536">
+    <circle cx="37" cy="74" r="2.3"/>
+    <circle cx="44" cy="74" r="2.3"/>
+    <circle cx="51" cy="74" r="2.3"/>
+  </g>
+</svg>
