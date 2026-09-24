@@ -101,7 +101,7 @@ jobs:
 
       # QUALITY GATE: si la cobertura baja de 80 % el pipeline se detiene
       - name: Ejecutar pruebas del asistente con cobertura
-        run: pytest tests_asistente --cov=asistente --cov-report=term-missing --cov-fail-under=80 -v
+        run: pytest tests --cov=src --cov-report=term-missing --cov-fail-under=80 -v
 
       - name: Construir la imagen del asistente
         run: docker build -f Dockerfile.asistente -t asistente-termo:${{ github.sha }} .
